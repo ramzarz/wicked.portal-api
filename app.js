@@ -12,6 +12,7 @@ const authMiddleware = require('./auth-middleware');
 const healthApi = require('./routes/health');
 const users = require('./routes/users');
 const applications = require('./routes/applications');
+const subscriptions = require('./routes/subscriptions');
 const utils = require('./routes/utils');
 const apis = require('./routes/apis');
 const content = require('./routes/content');
@@ -127,6 +128,8 @@ app.post('/login', verifyLoginScope, function (req, res, next) {
 app.get('/subscriptions/:clientId', authMiddleware.rejectFromKong, function (req, res, next) {
     applications.getSubscriptionByClientId(req, res);
 });
+
+app.use('/subscriptions', subscriptions);
 
 // ----- APPLICATIONS -----
 

@@ -175,7 +175,7 @@ applications.getApplications = function (app, res, loggedInUserId, filter, order
             return utils.fail(res, 500, 'getApplications: Could not load user.', err);
         if (!userInfo)
             return utils.fail(res, 403, 'Not allowed.');
-        if (!userInfo.admin)
+        if (!userInfo.admin && !userInfo.approver)
             return utils.fail(res, 403, 'Not allowed. This is admin land.');
 
         if (embed) {

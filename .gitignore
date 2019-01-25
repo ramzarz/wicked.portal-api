@@ -7,3 +7,4 @@ git_*
 .idea
 wicked_migration*
 migration_config.json
+package-lock.json

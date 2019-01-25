@@ -1,4 +1,4 @@
-FROM ${DOCKER_PREFIX}portal-env:${PORTAL_ENV_TAG}${BUILD_ALPINE}
+FROM ${DOCKER_PREFIX}env:${PORTAL_ENV_TAG}${BUILD_ALPINE}
 
 # Default user is "wicked", but we need root to set all access rights
 # correctly, and then start node as wicked using gosu.

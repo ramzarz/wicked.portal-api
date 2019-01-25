@@ -232,7 +232,7 @@ function injectRequiredGroups(apis) {
     const echoApi = apis.apis.find(api => api.id === 'echo');
     if (!echoApi)
         throw utils.makeError(500, 'injectAuthMethods: Internal API echo not found in internal APIs list');
-    echoApi.requiredGroup = globals.api.echoUserGroup;    
+    echoApi.requiredGroup = globals.api.echoUserGroup;
 }
 
 function injectAuthMethods(apis) {

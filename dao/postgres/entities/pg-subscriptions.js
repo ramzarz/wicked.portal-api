@@ -39,6 +39,24 @@ class PgSubscriptions {
         return this.getByApiImpl(apiId, offset, limit, callback);
     }
 
+    getAll(filter, orderBy, offset, limit, noCountCache, callback) {
+        debug('getAll()');
+        this.pgUtils.checkCallback(callback);
+        return this.getAllImpl(filter, orderBy, offset, limit, noCountCache, callback);
+    }
+
+    getIndex(offset, limit, callback) {
+        debug('getIndex()');
+        this.pgUtils.checkCallback(callback);
+        return this.getIndexImpl(offset, limit, callback);
+    }
+
+    getCount(callback) {
+        debug('getCount()');
+        this.pgUtils.checkCallback(callback);
+        return this.pgUtils.count('subscriptions', callback);
+    }
+
     create(newSubscription, creatingUserId, callback) {
         debug(`create(${newSubscription.id})`);
         this.pgUtils.checkCallback(callback);
@@ -77,6 +95,37 @@ class PgSubscriptions {
                 return callback(err);
             daoUtils.decryptApiCredentials(subsList);
             return callback(null, subsList);
+        });
+    }
+
+    getAllImpl(filter, orderBy, offset, limit, noCountCache, callback) {
+        debug(`getAll(filter: ${filter}, orderBy: ${orderBy}, offset: ${offset}, limit: ${limit})`);
+        const fields = [];
+        const values = [];
+        const operators = [];
+        this.pgUtils.addFilterOptions(filter, fields, values, operators);
+        const options = {
+            limit: limit,
+            offset: offset,
+            orderBy: orderBy ? orderBy : 'id ASC',
+            operators: operators,
+            noCountCache: noCountCache,
+        };
+        return this.pgUtils.getBy('subscriptions', fields, values, options, (err, subsList, countResult) => {
+            if (err)
+                return callback(err);
+            daoUtils.decryptApiCredentials(subsList);    
+            return callback(null, subsList, countResult);
+        });
+    }
+
+    getIndexImpl(offset, limit, callback) {
+        debug(`getIndex(offset: ${offset}, limit: ${limit})`);
+        this.pgUtils.getBy('subscriptions', [], [], { orderBy: 'id ASC' }, (err, subsList, countResult) => {
+            if (err)
+                return callback(err);
+            const subIdList = subsList.map(sub => { return { id: sub.id }; });
+            return callback(null, subIdList, countResult);
         });
     }
 
